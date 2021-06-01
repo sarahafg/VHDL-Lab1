@@ -1,0 +1,133 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: Abdullah Mohammad and Sarah Fakhry
+-- 
+-- Create Date: 01/25/2020 08:23:05 PM
+-- Design Name: 
+-- Module Name: testbench - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity testbench is
+
+end testbench;
+
+architecture Behavioral of testbench is
+    component alu
+    port(  A : in STD_LOGIC_VECTOR (31 downto 0);
+           B : in STD_LOGIC_VECTOR (31 downto 0);
+           Cin : in STD_LOGIC;
+           Cntrl: in STD_LOGIC_VECTOR (3 downto 0);
+           C : out STD_LOGIC_VECTOR (31 downto 0);
+           Zero: out STD_LOGIC;
+           Carry: out STD_LOGIC;
+           Overflow: out STD_LOGIC);
+     end component;
+     
+     --Inputs
+     signal A: std_logic_vector(31 downto 0) := (others => '0');
+     signal B: std_logic_vector(31 downto 0) := (others => '0');
+     signal Cin: std_logic := '0';
+     signal Cntrl: std_logic_vector(3 downto 0) := (others => '0');
+     
+     --Outputs
+     signal C: std_logic_vector(31 downto 0);
+     signal Zero: std_logic;
+     signal Carry: std_logic;
+     signal Overflow: std_logic;
+     
+begin
+
+-- Unit under Test
+uut: alu port map(
+    
+   A => A,
+   B => B,
+   C => C,
+   Cin => Cin,
+   Cntrl => Cntrl,
+   Zero => Zero,
+   Carry => Carry,
+   Overflow => Overflow);
+   
+-- Stimulus process
+stim_process: process
+begin
+    A <= x"FFFFFFFF";
+    B <= x"00000000";
+    Cntrl <= "0000";
+    wait for 10ns;
+    A <= x"98989898";
+    B <= x"89898989";
+    Cntrl <= "0001";
+    wait for 10ns;
+    A <= x"01010101";
+    B <= x"10101010";
+    Cntrl <= "0011";
+    wait for 10ns;
+    A <= x"00000001";
+    B <= x"FFFFFFFF";
+    Cin <= '0';
+    Cntrl <= "0010";
+    wait for 10ns;
+    A <= x"6389754F";
+    B <= x"AD5624E6";
+    Cin <= '0';
+    Cntrl <= "0010";
+    wait for 10ns;
+    A <= x"00000001";
+    B <= x"FFFFFFFF";
+    Cin <= '1';
+    Cntrl <= "0010";
+    wait for 10ns;
+    A <= x"6389754F";
+    B <= x"AD5624E6";
+    Cin <= '1';
+    Cntrl <= "0010";
+    wait for 10 ns;
+    A <= x"FFFFFFFF";
+    B <= x"FFFFFFFF";
+    Cin <= '1';
+    Cntrl <= "0010";
+    wait for 10ns;
+    A <= x"00000000";
+    B <= x"00000001";
+    Cntrl <= "0110";
+    wait for 10ns;
+    A <= x"F9684783";
+    B <= x"F998D562";
+    Cntrl <= "0110";
+    wait for 10ns;
+    A <= x"9ABCDEDF";
+    B <= x"9ABCDEFD";
+    Cntrl <= "1100";
+    wait for 10ns;
+    A <= x"89BCDE34";
+    B <= x"C53BD687";
+    Cntrl <= "1111";
+    wait for 10ns;
+    
+end process; 

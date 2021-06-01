@@ -1,0 +1,72 @@
+----------------------------------------------------------------------------------
+-- 
+-- Engineer: Abdullah Mohammad and Sarah Fakhry
+-- 
+-- Create Date: 01/22/2020 10:40:49 PM
+-- Design Name: ALU 
+-- Module Name: alu - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_SIGNED.ALL;
+
+
+
+entity alu is
+    Port ( A : in STD_LOGIC_VECTOR (31 downto 0);
+           B : in STD_LOGIC_VECTOR (31 downto 0);
+           Cin : in STD_LOGIC;
+           Cntrl: in STD_LOGIC_VECTOR (3 downto 0);
+           C : out STD_LOGIC_VECTOR (31 downto 0);
+           Zero: out STD_LOGIC;
+           Carry: out STD_LOGIC;
+           Overflow: out STD_LOGIC);
+end alu;
+
+architecture Behavioral of alu is
+
+signal Aa: std_logic_vector(32 downto 0);
+signal Bb: std_logic_vector(32 downto 0);
+signal Cc: std_logic_vector(32 downto 0);
+
+
+begin
+
+Aa <= '0' & A;
+Bb <= '0' & B;
+
+    with Cntrl select
+        Cc <= (Aa AND Bb) when "0000",
+              (Aa OR Bb) when "0001",
+              (Aa XOR Bb) when "0011",
+             (Aa + (Bb + Cin)) when "0010",
+             (Aa - Bb) when "0110",
+             (Aa NOR Bb) when "0100",
+             (others => '0') when others;
+
+Overflow <= ( A(31) and B(31) and not(Cc(31)) ) or ( not( A(31) ) and not( B(31) ) and Cc(31) );
+
+C <= Cc(31 downto 0);
+
+Zero <= '1' when Cc = x"00000000" else '0'; 
+   
+    with Cntrl select
+        Carry <=  Cc(32) when "0010",
+                 'Z' when others;
+
+
+end Behavioral;
+
